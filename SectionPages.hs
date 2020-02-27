@@ -38,7 +38,7 @@ renderParagraph ctx@RenderContext{nearestEnclosing=Left Paragraph{..}, draft=Dra
 		$ (sourceLink
 		  ++ renderLatexParas paraElems ctx'{extraIndentation=if paraInItemdescr then 3 else 0})
 	where
-		urlBase = Text.replace "/commit/" "/tree/" commitUrl ++ "/source/"
+		urlBase = Text.replace "/commit/" "/tree/" commitUrl ++ "/doc/source/"
 		sourceLink :: TextBuilder.Builder
 		sourceLink
 			| Just SourceLocation{..} <- paraSourceLoc =
@@ -131,7 +131,7 @@ sectionHeader hLevel s@Section{..} secnumHref abbr_ref ctx
     isDef = isDefinitionSection sectionKind
 
 writeFiguresFile :: SectionFileStyle -> Draft -> IO ()
-writeFiguresFile sfs draft = writeSectionFile "fig" sfs "14882: Figures" $
+writeFiguresFile sfs draft = writeSectionFile "fig" sfs "JEGP Library: Figures" $
 	"<h1>List of Figures <a href='SectionToToc/fig' class='abbr_ref'>[fig]</a></h1>"
 	++ mconcat (uncurry r . figures draft)
 	where
@@ -144,7 +144,7 @@ writeFiguresFile sfs draft = writeSectionFile "fig" sfs "14882: Figures" $
 			++ renderFig True f defaultRenderContext{draft=draft, nearestEnclosing=Left p, page=FiguresPage}
 
 writeTablesFile :: SectionFileStyle -> Draft -> IO ()
-writeTablesFile sfs draft = writeSectionFile "tab" sfs "14882: Tables" $
+writeTablesFile sfs draft = writeSectionFile "tab" sfs "JEGP Library: Tables" $
 	"<h1>List of Tables <a href='SectionToToc/tab' class='abbr_ref'>[tab]</a></h1>"
 	++ mconcat (uncurry r . tables draft)
 	where
@@ -155,7 +155,7 @@ writeTablesFile sfs draft = writeSectionFile "tab" sfs "14882: Tables" $
 			++ renderTab True t defaultRenderContext{draft=draft, nearestEnclosing=Left p, page=TablesPage}
 
 writeFootnotesFile :: SectionFileStyle -> Draft -> IO ()
-writeFootnotesFile sfs draft = writeSectionFile "footnotes" sfs "14882: Footnotes" $
+writeFootnotesFile sfs draft = writeSectionFile "footnotes" sfs "JEGP Library: Footnotes" $
 	"<h1>List of Footnotes</h1>"
 	++ mconcat (uncurry r . footnotes draft)
 	where
@@ -182,7 +182,7 @@ writeSectionFiles sfs draft = do
 	      title = squareAbbr abbreviation
 	      body = mconcat $ fst . renderSection (defaultRenderContext{draft=draft,page=SectionPage section}) (Just section) False . chapters draft
 	  fullbody = mconcat $ fst . renderSection defaultRenderContext{draft=draft, page=FullPage} Nothing True . chapters draft
-	  fullfile = ("full", sectionFileContent sfs "14882" fullbody)
+	  fullfile = ("full", sectionFileContent sfs "JEGP Library" fullbody)
 	  files = fullfile : map renSec secs
 	  names = fst . files
 	  contents = snd . files
@@ -195,7 +195,7 @@ writeSectionFiles sfs draft = do
 writeIndexFiles :: SectionFileStyle -> Index -> IO ()
 writeIndexFiles sfs index = forM_ (Map.toList index) $ \(Text.unpack -> cat, i) -> do
 	putStrLn $ "  " ++ cat
-	writeSectionFile cat sfs ("14882: " ++ indexCatName cat) $ h 1 (indexCatName cat) ++ render i defaultRenderContext{page=IndexPage}
+	writeSectionFile cat sfs ("JEGP Library: " ++ indexCatName cat) $ h 1 (indexCatName cat) ++ render i defaultRenderContext{page=IndexPage}
 
 writeCssFile :: IO ()
 writeCssFile = do
